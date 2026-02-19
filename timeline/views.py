@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from .models import TodoItem
-import requests
+import requests, json
 
 # Create your views here.
 def home(request):
@@ -17,4 +17,17 @@ def githubTimeline(request):
     response = requests.get(url)
     events = response.json()
 
-    return render(request, "timeline_display.html", {"events": events})
+    filtered_events = []
+
+    for event in events:
+        curr = {}
+
+        curr["type"] = event["type"]
+        repo_name: str = event["repo"]["name"]
+        curr["on_repo_by"] = repo_name.split("/")[0]
+        curr["repo_name"] = repo_name.split("/")[1]
+
+        filtered_events.append(curr)
+
+
+    return render(request, "timeline_display.html", {"name": username, "events": filtered_events})

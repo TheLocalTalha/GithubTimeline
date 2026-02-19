@@ -3,11 +3,11 @@
 {% block title %}Timeline{% endblock %}
 
 {% block content %}
-<h1>Timeline</h1>
+<h1>Timeline of {{name}}</h1>
 <ul>
   {% for event in events %}
   <li>
-    {{ event }}:
+    Event of type {{ event.type }} on the repository called {{event.repo_name}} by author {{event.on_repo_by}}
   </li>
   {% endfor %}
 </ul>
