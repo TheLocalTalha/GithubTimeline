@@ -1,10 +1,18 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from .models import TodoItem
-import requests, json
+import requests
 
 # Create your views here.
 def home(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+
+        request.session["github_username"] = username
+
+        return redirect("/timeline")
+
     return render(request, "home.html")
+
 
 def todos(request):
     items = TodoItem.objects.all()
@@ -12,7 +20,7 @@ def todos(request):
 
 def githubTimeline(request):
 
-    username = "TheLocalTalha"
+    username = request.session["github_username"]
     url = f"https://api.github.com/users/{username}/events"
     response = requests.get(url)
     events = response.json()
